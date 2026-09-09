@@ -1,0 +1,15 @@
+---
+description: Project briefing for subsequent agents working on this Convex chat demo
+alwaysApply: true
+---
+
+# convex-chat
+
+Slack-style **learning demo** of idiomatic Convex. Read `AGENTS.md` for the short briefing. For a full product/architecture spec (including ports to another stack), read `docs/PRODUCT.md` and `docs/ARCHITECTURE.md`.
+
+- Vite + React + Convex Auth (password) + shadcn + `@convex-dev/presence`
+- Backend is Convex Cloud; frontend is local. Do not commit `.env.local` or secrets
+- One domain per `convex/*.ts` file. Index every lookup. Prefer queries/mutations over actions
+- Selected channel is React state — do not add a router unless asked
+- Preserve JSDoc on functions and component props
+- Do not add DMs, file uploads, Clerk, Next.js, or password-reset email unless requested

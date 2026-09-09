@@ -1,0 +1,25 @@
+---
+description: React client conventions for the Convex chat UI
+globs: src/**/*.tsx
+alwaysApply: false
+---
+
+# React + Convex client
+
+`useQuery` is a subscription. Treat `undefined` as loading (skeletons), not as empty data.
+
+```tsx
+// ❌ BAD
+const messages = useQuery(api.messages.list, { channelId }) ?? [];
+
+// ✅ GOOD
+const messages = useQuery(api.messages.list, { channelId });
+if (messages === undefined) return <Skeleton />;
+```
+
+- Gate the app with `Authenticated` / `Unauthenticated` / `AuthLoading` in `src/App.tsx`
+- Use `ConvexAuthProvider` in `src/main.tsx` (not raw `ConvexProvider`)
+- Sign-in form posts `FormData` with `email`, `password`, `flow`, and `name` on sign-up
+- Debounce typing upserts (~300ms); clear typing on send, blur, and unmount
+- Use shadcn pieces in `src/components/ui/`; put app components in `src/components/`
+- Do not add React Router unless the user asks — channel selection stays in React state

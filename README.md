@@ -2,6 +2,8 @@
 
 A small Slack-style demo of an **idiomatic Convex** fullstack app: Vite + React, Convex Auth (password), Tailwind + shadcn/ui, and the official Presence component.
 
+**Porting or reading as another agent:** start at [docs/PRODUCT.md](docs/PRODUCT.md) (behavior to match) and [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (how this repo is built). Index: [docs/README.md](docs/README.md).
+
 Open two browser windows, sign in as two users, and watch messages, typing, and who’s-online update without any extra websocket code.
 
 ## What Convex is doing

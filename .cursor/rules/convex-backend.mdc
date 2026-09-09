@@ -1,0 +1,28 @@
+---
+description: Convex backend conventions for this chat demo
+globs: convex/**/*.ts
+alwaysApply: false
+---
+
+# Convex functions
+
+Public functions use `v.*` args. Mutations that write call `requireUserId` from `convex/lib/auth.ts`. List queries may return `[]` when signed out instead of throwing.
+
+```ts
+// ❌ BAD — scan then filter
+const all = await ctx.db.query("messages").collect();
+return all.filter((m) => m.channelId === args.channelId);
+
+// ✅ GOOD — use the schema index
+return await ctx.db
+  .query("messages")
+  .withIndex("by_channel", (q) => q.eq("channelId", args.channelId))
+  .order("desc")
+  .take(50);
+```
+
+- Do not put presence rows in `schema.ts`; wrap `@convex-dev/presence` in `convex/presence.ts`
+- Typing uses the `typing` table + `ctx.scheduler.runAfter` → `internal.typing.clearIfStale`
+- Keep presence `list` room-scoped (no viewer id in args) so clients share the query cache
+- Edit `convex/schema.ts` when adding tables; never treat Postgres/SQLite as the app schema
+- Do not hand-edit `convex/_generated/` — `npx convex dev` regenerates it
