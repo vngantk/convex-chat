@@ -27,6 +27,8 @@ export function MessageInput({ channelId }: MessageInputProps) {
   const upsertTyping = useMutation(api.typing.upsert);
   const clearTyping = useMutation(api.typing.clear);
   const [body, setBody] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
   const timeoutRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
@@ -48,45 +50,59 @@ export function MessageInput({ channelId }: MessageInputProps) {
 
   /**
    * Send the current draft and clear the typing row.
+   * The draft stays in the field until the mutation succeeds.
    *
    * @param event Form submit from the composer.
    */
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
     const text = body.trim();
-    if (!text) {
+    if (!text || sending) {
       return;
     }
-    setBody("");
+    setError(null);
+    setSending(true);
     window.clearTimeout(timeoutRef.current);
-    await Promise.all([
-      send({ channelId, body: text }),
-      clearTyping({ channelId }),
-    ]);
+    try {
+      await Promise.all([
+        send({ channelId, body: text }),
+        clearTyping({ channelId }),
+      ]);
+      setBody("");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Could not send message.");
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
     <form
       onSubmit={(event) => void onSubmit(event)}
-      className="flex gap-2 border-t p-3"
+      className="flex shrink-0 flex-col gap-2 border-t p-3"
     >
-      <Input
-        value={body}
-        onChange={(event) => {
-          setBody(event.target.value);
-          scheduleTyping();
-        }}
-        onBlur={() => {
-          window.clearTimeout(timeoutRef.current);
-          void clearTyping({ channelId });
-        }}
-        placeholder="Message this channel"
-        autoComplete="off"
-      />
-      <Button type="submit" disabled={!body.trim()}>
-        <Send />
-        Send
-      </Button>
+      {error ? <p className="text-xs text-destructive">{error}</p> : null}
+      <div className="flex gap-2">
+        <Input
+          value={body}
+          onChange={(event) => {
+            setBody(event.target.value);
+            setError(null);
+            scheduleTyping();
+          }}
+          onBlur={() => {
+            window.clearTimeout(timeoutRef.current);
+            void clearTyping({ channelId });
+          }}
+          placeholder="Message this channel"
+          autoComplete="off"
+          disabled={sending}
+        />
+        <Button type="submit" disabled={!body.trim() || sending}>
+          <Send />
+          Send
+        </Button>
+      </div>
     </form>
   );
 }

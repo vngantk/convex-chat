@@ -28,7 +28,7 @@ export function TypingIndicator({
   const others = typing?.filter((entry) => entry.userId !== viewerId) ?? [];
 
   if (others.length === 0) {
-    return <div className="h-6 px-4" />;
+    return <div className="h-6 shrink-0 px-4" />;
   }
 
   const names = others.map((entry) => entry.name);
@@ -40,6 +40,6 @@ export function TypingIndicator({
         : `${names[0]} and ${names.length - 1} others are typing…`;
 
   return (
-    <p className="h-6 px-4 text-xs text-muted-foreground italic">{label}</p>
+    <p className="h-6 shrink-0 px-4 text-xs text-muted-foreground italic">{label}</p>
   );
 }

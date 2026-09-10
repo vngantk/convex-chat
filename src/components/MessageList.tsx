@@ -31,15 +31,20 @@ export function MessageList({
 }: MessageListProps) {
   const messages = useQuery(api.messages.list, { channelId });
   const removeOwn = useMutation(api.messages.removeOwn);
-  const endRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: "smooth" });
+    const viewport = rootRef.current?.querySelector<HTMLElement>(
+      "[data-slot='scroll-area-viewport']",
+    );
+    if (viewport) {
+      viewport.scrollTop = viewport.scrollHeight;
+    }
   }, [messages]);
 
   if (messages === undefined) {
     return (
-      <div className="flex flex-1 flex-col gap-3 p-4">
+      <div className="flex min-h-0 flex-1 flex-col gap-3 p-4">
         <Skeleton className="h-12 w-2/3" />
         <Skeleton className="h-12 w-1/2 self-end" />
         <Skeleton className="h-12 w-3/5" />
@@ -48,7 +53,7 @@ export function MessageList({
   }
 
   return (
-    <ScrollArea className="flex-1">
+    <ScrollArea ref={rootRef} className="min-h-0 flex-1 overflow-hidden">
       <div className="flex flex-col gap-3 p-4">
         {messages.length === 0 ? (
           <p className="text-sm text-muted-foreground">
@@ -93,7 +98,6 @@ export function MessageList({
             );
           })
         )}
-        <div ref={endRef} />
       </div>
     </ScrollArea>
   );

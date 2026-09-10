@@ -38,8 +38,8 @@ export function ChatApp() {
   const selected = channels?.find((channel) => channel._id === channelId);
 
   return (
-    <div className="flex min-h-svh">
-      <aside className="flex w-64 shrink-0 flex-col bg-zinc-950 text-zinc-100">
+    <div className="flex h-svh overflow-hidden">
+      <aside className="flex min-h-0 w-64 shrink-0 flex-col bg-zinc-950 text-zinc-100">
         <div className="border-b border-zinc-800 px-4 py-4">
           <p className="text-sm font-semibold tracking-tight">Convex Chat</p>
           <p className="text-xs text-zinc-400">Realtime rooms</p>
@@ -76,10 +76,10 @@ export function ChatApp() {
           </Button>
         </div>
       </aside>
-      <main className="flex min-w-0 flex-1 flex-col bg-background">
+      <main className="flex min-h-0 min-w-0 flex-1 flex-col bg-background">
         {selected && viewer ? (
           <>
-            <header className="flex items-center justify-between gap-3 border-b px-4 py-3">
+            <header className="flex shrink-0 items-center justify-between gap-3 border-b px-4 py-3">
               <div>
                 <h1 className="text-sm font-semibold">#{selected.name}</h1>
                 <p className="text-xs text-muted-foreground">
@@ -96,7 +96,7 @@ export function ChatApp() {
               channelId={selected._id}
               viewerId={viewer._id}
             />
-            <MessageInput channelId={selected._id} />
+            <MessageInput key={selected._id} channelId={selected._id} />
           </>
         ) : (
           <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
