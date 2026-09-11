@@ -8,7 +8,7 @@ alwaysApply: true
 Slack-style **learning demo** of idiomatic Convex. Read `AGENTS.md` for the short briefing. For a full product/architecture spec (including ports to another stack), read `docs/PRODUCT.md` and `docs/ARCHITECTURE.md`.
 
 - Vite + React + Convex Auth (password) + shadcn + `@convex-dev/presence`
-- Backend is Convex Cloud; frontend is local. Do not commit `.env.local` or secrets
+- Frontend is local (`:5173`, Vite proxies `/api`). Backend is Convex Cloud by default (`npm run dev`); `npm run dev:local` uses a local CLI deployment. Do not commit `.env.local` or secrets
 - One domain per `convex/*.ts` file. Index every lookup. Prefer queries/mutations over actions
 - Selected channel is React state — do not add a router unless asked
 - Preserve JSDoc on functions and component props

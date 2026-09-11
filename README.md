@@ -25,22 +25,38 @@ Open two browser windows, sign in as two users, and watch messages, typing, and 
 
 ## Run it
 
-You need Node 20+ and a [Convex](https://dashboard.convex.dev) account (sign in with GitHub).
+You need Node 20+. A [Convex](https://dashboard.convex.dev) account (GitHub sign-in) is only required for the **cloud** backend.
+
+The browser always uses **http://localhost:5173**. Vite proxies `/api` (and Auth HTTP routes) to Convex, so you do not open the backend ports.
+
+**Local backend** (no cloud quota; data in `.convex/`):
 
 ```bash
 npm install
+npm run dev:local
+```
+
+The first run creates a local CLI deployment, writes `VITE_CONVEX_URL` to `.env.local`, and generates Convex Auth JWT keys if they are missing.
+
+**Cloud backend** (needs a Convex account):
+
+```bash
+npx convex deployment select dev
 npm run dev
 ```
 
-The first `convex dev` run will log you in, create a deployment, and write `VITE_CONVEX_URL` to `.env.local`. Then:
+Then:
 
 1. Open http://localhost:5173
 2. Sign up with email, password (8+ characters), and a display name
 3. Duplicate the tab (or use a private window) and sign up as a second user
 4. Send messages, create a channel, and watch presence + typing
 
+Switch back and forth with `npx convex deployment select local` or `npx convex deployment select dev`. Local deployments are a Convex beta, for development only.
+
 ## Scripts
 
-- `npm run dev` — Vite frontend + `convex dev` together
+- `npm run dev:local` — local Convex backend + Vite on port 5173
+- `npm run dev` — Vite frontend + `convex dev` (currently selected deployment)
 - `npm run dev:frontend` / `npm run dev:backend` — each process on its own
 - `npm run build` — production frontend build

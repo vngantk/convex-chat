@@ -7,12 +7,12 @@ Full product + architecture for a **same-app, different-stack** rewrite: [docs/P
 ## Stack
 
 - Vite + React 19 + TypeScript
-- Convex (schema, queries, mutations, scheduler) on **Convex Cloud**
+- Convex (schema, queries, mutations, scheduler) on **Convex Cloud** or a **local CLI** deployment (`npm run dev:local`)
 - Convex Auth: Password provider (email + password + display `name` on sign-up)
 - Tailwind v4 + shadcn/ui (`src/components/ui/`)
 - `@convex-dev/presence` component (not a custom presence table)
 
-Frontend is local (`npm run dev` → http://localhost:5173). Backend is the cloud **dev** deployment. `VITE_CONVEX_URL` lives in `.env.local` (gitignored). Never commit `.env.local`, JWT keys, or `.convex/`.
+Frontend is local (`http://localhost:5173`). Vite proxies `/api` to Convex so the browser uses one port. `npm run dev` uses the currently selected deployment (cloud by default). `npm run dev:local` selects a local CLI backend. `VITE_CONVEX_URL` lives in `.env.local` (gitignored). Never commit `.env.local`, JWT keys, or `.convex/`.
 
 Repo remote: Cursor-hosted `vincent-ngan/convex-chat`.
 
@@ -42,4 +42,4 @@ Keep JSDoc on public functions, table shapes, and component props when you add o
 
 DMs, file uploads, unread badges, password-reset email, Next.js, pagination beyond `take(50)`.
 
-Local CLI deployments (`npx convex deployment select local`) are **beta / dev-only**. Self-hosted Convex (Docker + optional Postgres) is a **production-on-your-infra** option, separate from this Cloud demo.
+Local CLI deployments (`npm run dev:local`) are **beta / dev-only**. Self-hosted Convex (Docker + optional Postgres) is a **production-on-your-infra** option, separate from this Cloud demo.

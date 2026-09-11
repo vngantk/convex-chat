@@ -6,7 +6,9 @@ How **convex-chat** implements [PRODUCT.md](./PRODUCT.md). Use this to understan
 
 ```
 Browser (Vite, :5173)
-  └─ WebSocket ─► Convex Cloud deployment
+  └─ WebSocket / HTTP `/api` (Vite proxy)
+        ├─ Convex Cloud (`npm run dev`, after `deployment select dev`)
+        └─ Local CLI backend :3210 / :3211 (`npm run dev:local`)
                     ├─ document DB (channels, messages, typing, auth tables)
                     ├─ query/mutation functions in convex/
                     ├─ scheduler (typing expiry)
@@ -17,7 +19,7 @@ Browser (Vite, :5173)
 - Auth: `@convex-dev/auth` Password provider
 - Generated types: `convex/_generated/` (do not hand-edit; `npx convex dev` rewrites them)
 
-`npm run dev` runs Vite and `convex dev` together. `VITE_CONVEX_URL` is written to `.env.local`.
+`npm run dev` runs Vite and `convex dev` together against the selected deployment. `npm run dev:local` selects a local CLI backend and starts Vite via `convex dev --start`. `VITE_CONVEX_URL` is written to `.env.local`. In Vite dev the client connects to `window.location.origin`; the proxy forwards `/api` to that URL.
 
 ## Convex primitives (map these when porting)
 
